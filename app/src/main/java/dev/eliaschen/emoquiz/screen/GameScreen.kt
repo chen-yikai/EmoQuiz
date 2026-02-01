@@ -2,6 +2,7 @@ package dev.eliaschen.emoquiz.screen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -10,6 +11,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOut
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -25,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -218,18 +221,28 @@ fun ScoreBox(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AnimatedContent(color) {
+            AnimatedContent(color, transitionSpec = {
+                (slideInVertically { it } + fadeIn() togetherWith slideOutVertically() { -it } + fadeOut()).using(
+                    SizeTransform(clip = false)
+                )
+            }) {
                 when (it) {
                     GameColor.NORMAL -> Text("目前分數")
                     GameColor.PASS -> Text("得分")
                     GameColor.REJECT -> Text("扣分")
                 }
             }
-            AnimatedContent(color) {
-                if (it == GameColor.NORMAL) {
-                    Text(score.toString())
-                } else {
-                    Text("${if (it == GameColor.REJECT) "-" else "+"}$scoreChange")
+            AnimatedContent(color, transitionSpec = {
+                (slideInVertically { it } + fadeIn() togetherWith slideOutVertically() { -it } + fadeOut()).using(
+                    SizeTransform(clip = false)
+                )
+            }) {
+                Box(modifier = Modifier.width(20.dp), contentAlignment = Alignment.CenterEnd) {
+                    if (it == GameColor.NORMAL) {
+                        Text(score.toString())
+                    } else {
+                        Text("${if (it == GameColor.REJECT) "-" else "+"}$scoreChange")
+                    }
                 }
             }
         }
