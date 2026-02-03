@@ -41,8 +41,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val game = LocalGameDataViewModel.current
     val questions = game.questions
     val context = LocalContext.current
-    var questionCount by remember { mutableStateOf("") }
-    val selectedDifficulty = remember { mutableStateSetOf<String>() }
+    var questionCount by remember { mutableStateOf("5") }
+    val selectedDifficulty = remember { mutableStateSetOf<String>("easy") }
 
     fun handleSubmit() {
         try {
