@@ -1,5 +1,6 @@
 package dev.eliaschen.emoquiz.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
@@ -11,7 +12,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOut
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -34,7 +34,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -50,7 +49,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.util.fastFirst
 import dev.eliaschen.emoquiz.LocalGameDataViewModel
 import dev.eliaschen.emoquiz.LocalNavViewModel
 import dev.eliaschen.emoquiz.schema.Question
@@ -207,11 +205,17 @@ private fun QuestionInfo(
 @Composable
 fun ScoreBox(modifier: Modifier = Modifier) {
     val data = LocalGameDataViewModel.current
+
     data.apply {
         val backgroundColor by animateColorAsState(
             if (color == GameColor.NORMAL) MaterialTheme.colorScheme.secondaryContainer else color.containerColor,
             label = "bottom score box animation"
         )
+
+        BackHandler {
+            handleExit()
+        }
+
         Row(
             modifier
                 .fillMaxWidth()

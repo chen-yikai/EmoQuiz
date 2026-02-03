@@ -14,8 +14,6 @@ import dev.eliaschen.emoquiz.viewmodel.QuestionViewModel
 
 val LocalNavViewModel =
     compositionLocalOf<NavViewModel> { error("NavViewModel not provided") }
-val LocalQuestionViewModel =
-    compositionLocalOf<QuestionViewModel> { error("QuestionViewModel not provided") }
 val LocalGameDataViewModel = compositionLocalOf<GameDataViewModel> { error("GameViewModel not provided") }
 
 class MainActivity : ComponentActivity() {
@@ -24,12 +22,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
                 val nav: NavViewModel by viewModels()
-                val question: QuestionViewModel by viewModels()
                 val gameData: GameDataViewModel by viewModels()
 
                 CompositionLocalProvider(
                     LocalNavViewModel provides nav,
-                    LocalQuestionViewModel provides question,
                     LocalGameDataViewModel provides gameData
                 ) {
                     NavGraph()

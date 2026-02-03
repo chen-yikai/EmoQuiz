@@ -1,6 +1,7 @@
 package dev.eliaschen.emoquiz.viewmodel
 
 import android.app.Application
+import android.media.MediaPlayer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -8,10 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.util.fastFirst
 import androidx.lifecycle.viewModelScope
+import dev.eliaschen.emoquiz.R
 import dev.eliaschen.emoquiz.Utils
-import dev.eliaschen.emoquiz.difficulty
 import dev.eliaschen.emoquiz.schema.History
 import dev.eliaschen.emoquiz.schema.Question
 import dev.eliaschen.emoquiz.toJson
@@ -30,10 +30,12 @@ enum class GameColor(val containerColor: Color, val borderColor: Color) {
 }
 
 class GameDataViewModel(private val context: Application) : QuestionViewModel(context) {
+    // History
     val historyFile = File(context.filesDir, history_file)
     val histories = mutableStateListOf<History>()
     var spotlightId by mutableStateOf("")
 
+    // GameState
     val gameQuestions = mutableStateListOf<Question>()
     var score by mutableIntStateOf(0)
     var currentIndex by mutableIntStateOf(0)
@@ -45,6 +47,18 @@ class GameDataViewModel(private val context: Application) : QuestionViewModel(co
     var correctAnswer = mutableStateSetOf<Int>()
     var wrongAnswer = mutableStateSetOf<Int>()
     var gameDifficulty = mutableStateSetOf<String>()
+
+    // SFX
+    private val correctSFX = MediaPlayer.create(context, R.raw.duolingo)
+    private val wrongSFX = MediaPlayer.create(context, R.raw.duolingo_wrong)
+
+    fun playCorrect() {
+        correctSFX.start()
+    }
+
+    fun playWrong() {
+        wrongSFX.start()
+    }
 
     fun resetGame() {
         gameQuestions.clear()
@@ -85,6 +99,7 @@ class GameDataViewModel(private val context: Application) : QuestionViewModel(co
         val currentQuestion = gameQuestions[currentIndex]
         if (currentQuestion.correctAnswer.contains(id)) {
             // pass
+            playCorrect()
             color = GameColor.PASS
             correctAnswer.add(currentQuestion.id)
             viewModelScope.launch {
@@ -94,10 +109,15 @@ class GameDataViewModel(private val context: Application) : QuestionViewModel(co
             }
         } else {
             // reject
+            playWrong()
             color = GameColor.REJECT
             wrongAnswer.add(currentQuestion.id)
             penalty()
         }
+    }
+
+    fun handleExit() {
+        gameOver = true
     }
 
     private fun reward(difficulty: String) {

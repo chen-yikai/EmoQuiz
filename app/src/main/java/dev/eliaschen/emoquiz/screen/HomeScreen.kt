@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.eliaschen.emoquiz.LocalGameDataViewModel
 import dev.eliaschen.emoquiz.LocalNavViewModel
-import dev.eliaschen.emoquiz.LocalQuestionViewModel
 import dev.eliaschen.emoquiz.R
 import dev.eliaschen.emoquiz.difficulty
 import dev.eliaschen.emoquiz.viewmodel.Screen
