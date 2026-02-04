@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -69,7 +70,6 @@ fun GameScreen(modifier: Modifier = Modifier) {
     val game = LocalGameDataViewModel.current
     val nav = LocalNavViewModel.current
 
-
     game.apply {
         val questionCount = currentIndex + 1
         val totalQuestionCount = gameQuestions.size
@@ -82,7 +82,11 @@ fun GameScreen(modifier: Modifier = Modifier) {
         }
 
         LaunchedEffect(gameOver) {
-            if (gameOver) nav.navTo(Screen.History)
+            if (gameOver && spotlightId.isNotEmpty()) {
+                nav.navTo(Screen.History)
+            } else if (gameOver) {
+                nav.navTo(Screen.Home)
+            }
         }
 
         Box(
@@ -124,7 +128,7 @@ private fun GameDataViewModel.OptionsGridLayout(question: Question) {
         GridCells.Fixed(2),
         modifier = Modifier.widthIn(max = 350.dp),
     ) {
-        items(question.options) { item ->
+        items(question.options.shuffled()) { item ->
             val boxShape = RoundedCornerShape(10.dp)
             var boxRect by remember { mutableStateOf(Rect.Zero) }
             var isHovered by remember { mutableStateOf(false) }
@@ -203,8 +207,8 @@ private fun GameDataViewModel.PenaltyProgressBox(modifier: Modifier = Modifier) 
         exit = slideOutVertically { -it } + fadeOut()) {
         Column(
             modifier = modifier
-                .fillMaxWidth()
-                .padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)
+                .fillMaxWidth().statusBarsPadding()
+                .padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             LinearProgressIndicator(
                 progress = { progress.value },
@@ -259,7 +263,7 @@ private fun GameDataViewModel.ScoreBox(modifier: Modifier = Modifier) {
     Row(
         modifier
             .fillMaxWidth()
-            .padding(20.dp)
+            .padding(horizontal = 20.dp)
             .background(backgroundColor, RoundedCornerShape(10.dp))
             .padding(horizontal = 20.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,

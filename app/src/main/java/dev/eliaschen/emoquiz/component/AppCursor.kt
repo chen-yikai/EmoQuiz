@@ -8,13 +8,24 @@ import android.hardware.SensorManager
 import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -28,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -37,8 +49,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import dev.eliaschen.emoquiz.LocalGameDataViewModel
+import dev.eliaschen.emoquiz.LocalNavViewModel
 import dev.eliaschen.emoquiz.R
+import dev.eliaschen.emoquiz.viewmodel.Screen
 import kotlin.math.roundToInt
 
 @Composable
@@ -73,6 +88,10 @@ fun AppCursor() {
     fun center() {
         centerRoll = rawRoll
         centerPitch = rawPitch
+    }
+
+    LaunchedEffect(game.adjustCursor) {
+        center()
     }
 
     LaunchedEffect(Unit) {
@@ -111,7 +130,7 @@ fun AppCursor() {
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Box(
-            modifier = Modifier
+            modifier = Modifier.zIndex(0f)
                 .size(50.dp)
                 .offset {
                     val maxX = (screenWidthPx - boxSize) / 2
@@ -134,18 +153,6 @@ fun AppCursor() {
                         game.cursorRect = layoutCoordinates.boundsInWindow()
                     }
             )
-        }
-        IconButton(
-            onClick = {
-                center()
-            },
-            modifier = Modifier
-                .navigationBarsPadding()
-                .padding(bottom = 100.dp, end = 20.dp)
-                .align(Alignment.BottomEnd),
-            colors = IconButtonDefaults.iconButtonColors(containerColor = Color.White)
-        ) {
-            Icon(painter = painterResource(R.drawable.adjust), contentDescription = null)
         }
     }
 }

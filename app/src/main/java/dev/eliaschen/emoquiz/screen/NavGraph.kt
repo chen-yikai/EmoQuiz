@@ -13,20 +13,18 @@ fun NavGraph() {
     val nav = LocalNavViewModel.current
 
     Box {
-        Crossfade(nav.currentStack) {
-            when (it) {
-                Screen.Home ->
-                    CustomScaffold {
+        CustomScaffold {
+            Crossfade(nav.currentStack) {
+                when (it) {
+                    Screen.Home ->
                         HomeScreen()
-                    }
 
-                Screen.History -> CustomScaffold {
-                    HistoryScreen()
+                    Screen.History ->
+                        HistoryScreen()
+
+                    Screen.Game -> GameScreen()
                 }
-
-                Screen.Game -> GameScreen()
             }
         }
-        AppCursor()
     }
 }

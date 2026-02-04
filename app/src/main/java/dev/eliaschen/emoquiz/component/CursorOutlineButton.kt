@@ -5,21 +5,19 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
@@ -37,19 +35,19 @@ import dev.eliaschen.emoquiz.LocalGameDataViewModel
 
 @Composable
 fun CursorOutlineButton(
-    shape: Shape = RoundedCornerShape(20f),
     modifier: Modifier = Modifier,
+    selected: Boolean = false,
+    style: DefaultCursorButton = DefaultCursorButton(),
     onClick: () -> Unit,
     content: @Composable (Boolean) -> Unit
 ) {
     val game = LocalGameDataViewModel.current
-    var isHover by remember { mutableStateOf(false) }
     var boxRect by remember { mutableStateOf(Rect.Zero) }
+    val isHover by remember { derivedStateOf { game.cursorRect.overlaps(boxRect) } }
     val progress = remember { Animatable(0f) }
     val scale by animateFloatAsState(if (isHover) 1.1f else 1f)
 
-    LaunchedEffect(game.cursorRect, boxRect) {
-        isHover = game.cursorRect.overlaps(boxRect)
+    LaunchedEffect(isHover) {
         if (isHover) {
             progress.animateTo(1f, animationSpec = tween(1500, easing = LinearEasing))
             onClick()
@@ -64,16 +62,15 @@ fun CursorOutlineButton(
             .onGloballyPositioned {
                 boxRect = it.boundsInWindow()
             }
-            .then(
-                if (isHover) Modifier.borderProgressBar(
-                    progress.value,
-                    MaterialTheme.colorScheme.primary,
-                    5.dp,
-                    shape
-                ) else Modifier
+            .background(style.containerColor, style.shape)
+            .borderProgressBar(
+                if (!selected) progress.value else 1f,
+                style.progressColor,
+                3.dp,
+                style.shape
             )
-            .background(MaterialTheme.colorScheme.primaryContainer, shape)
-            .then(modifier), contentAlignment = Alignment.Center
+            .then(modifier),
+        contentAlignment = Alignment.Center
     ) {
         content(isHover)
     }

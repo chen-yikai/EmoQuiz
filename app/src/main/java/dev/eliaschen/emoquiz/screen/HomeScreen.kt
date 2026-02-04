@@ -2,7 +2,6 @@ package dev.eliaschen.emoquiz.screen
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,12 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.eliaschen.emoquiz.LocalGameDataViewModel
@@ -71,7 +65,11 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(painter = painterResource(R.drawable.logo_bg_removed), contentDescription = null)
+            Image(
+                painter = painterResource(R.drawable.logo_bg_removed),
+                contentDescription = null,
+                modifier = Modifier.size(150.dp)
+            )
             Text("題目選項", fontSize = 30.sp, fontWeight = FontWeight.Bold)
         }
         Column(
@@ -95,14 +93,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                                 onClick = {
                                     questionCount = number.toString()
                                 }, modifier = Modifier
-                                    .then(
-                                        if (number == questionCount.toInt()) Modifier.border(
-                                            3.dp,
-                                            MaterialTheme.colorScheme.primary,
-                                            DefaultCursorButton().shape
-                                        ) else Modifier,
-                                    )
-                                    .size(50.dp)
+                                    .size(50.dp), selected = number.toString() == questionCount
                             ) {
                                 Text("$number")
                             }
@@ -132,14 +123,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                                     if (!isSelected) selectedDifficulty.add(value) else selectedDifficulty.remove(
                                         value
                                     )
-                                }, modifier = Modifier
-                                    .then(
-                                        if (isSelected) Modifier.border(
-                                            3.dp,
-                                            MaterialTheme.colorScheme.primary,
-                                            DefaultCursorButton().shape
-                                        ) else Modifier,
-                                    )
+                                }, selected = isSelected, modifier = Modifier
                                     .size(70.dp)
                             ) {
                                 Text(label)
@@ -160,7 +144,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 onClick = {
                     handleSubmit()
                 },
-                shape = RoundedCornerShape(30f),
+                style = DefaultCursorButton(
+                    shape = RoundedCornerShape(30f),
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                ),
                 modifier = Modifier.padding(vertical = 15.dp, horizontal = 20.dp)
             ) {
                 Row(
