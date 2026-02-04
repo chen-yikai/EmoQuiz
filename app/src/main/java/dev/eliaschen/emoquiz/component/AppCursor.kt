@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -14,8 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -63,6 +66,15 @@ fun AppCursor() {
         label = "y"
     )
 
+    fun center() {
+        centerRoll = rawRoll
+        centerPitch = rawPitch
+    }
+
+    LaunchedEffect(Unit) {
+        center()
+    }
+
     DisposableEffect(Unit) {
         val sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
         val listener = object : SensorEventListener {
@@ -76,9 +88,13 @@ fun AppCursor() {
 
                     val roll = orientation[2]
                     val pitch = orientation[1]
-
-                    rawPitch = -pitch
-                    rawRoll = roll
+                    if (!pitch.isNaN() && !roll.isNaN()) {
+                        rawPitch = -pitch
+                        rawRoll = roll
+                    } else {
+                        rawPitch = 0f
+                        rawRoll = 0f
+                    }
                 }
             }
 
@@ -117,8 +133,7 @@ fun AppCursor() {
         }
         IconButton(
             onClick = {
-                centerRoll = rawRoll
-                centerPitch = rawPitch
+                center()
             },
             modifier = Modifier
                 .padding(100.dp)

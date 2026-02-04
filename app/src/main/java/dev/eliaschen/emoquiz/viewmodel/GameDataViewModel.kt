@@ -33,7 +33,6 @@ enum class GameColor(val containerColor: Color, val borderColor: Color) {
 class GameDataViewModel(private val context: Application) : QuestionViewModel(context) {
     // Cursor
     var cursorRect by mutableStateOf(Rect.Zero)
-    var optionsRect = mutableStateListOf<Rect>()
 
     // History
     val historyFile = File(context.filesDir, history_file)

@@ -114,7 +114,6 @@ fun GameScreen(modifier: Modifier = Modifier) {
                 }
             }
             ScoreBox(modifier = Modifier.align(Alignment.BottomCenter))
-            AppCursor()
         }
     }
 }
