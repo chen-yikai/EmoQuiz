@@ -149,7 +149,7 @@ fun AppCursor() {
             )
             Box(
                 modifier = Modifier
-                    .size(30.dp)
+                    .size(20.dp)
                     .onGloballyPositioned { layoutCoordinates ->
                         game.cursorRect = layoutCoordinates.boundsInWindow()
                     }
