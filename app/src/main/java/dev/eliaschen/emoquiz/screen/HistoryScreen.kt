@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.eliaschen.emoquiz.LocalGameDataViewModel
 import dev.eliaschen.emoquiz.R
+import dev.eliaschen.emoquiz.component.CursorOutlineButton
 import dev.eliaschen.emoquiz.toDateTimeFormat
 import dev.eliaschen.emoquiz.toDifficultyLabel
 import dev.eliaschen.emoquiz.viewmodel.GameColor
@@ -70,22 +70,29 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
             .padding(horizontal = 20.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("遊玩紀錄", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-            IconButton(onClick = { isFlip = !isFlip }) {
+            CursorOutlineButton(onClick = {
+                isFlip = !isFlip
+            }) {
                 Icon(
                     painter = painterResource(R.drawable.swap),
                     contentDescription = null,
-                    modifier = Modifier.graphicsLayer {
-                        scaleX = if (isFlip) -1f else 1f
-                    })
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .graphicsLayer {
+                            scaleX = if (isFlip) -1f else 1f
+                        })
             }
         }
         LazyColumn(
-            contentPadding = PaddingValues(vertical = 20.dp),
+            state = game.historyListState,
+            contentPadding = PaddingValues(top = 20.dp, bottom = 100.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(if (!isFlip) game.histories.sortedByDescending { it.timestamp } else game.histories.sortedBy { it.timestamp }) { history ->

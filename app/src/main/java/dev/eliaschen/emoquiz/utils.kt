@@ -21,7 +21,7 @@ fun Application.readAssetFile(path: String): String {
     return this.assets.open(path).bufferedReader().readText()
 }
 
-fun Long.toDateTimeFormat(format: String): String{
+fun Long.toDateTimeFormat(format: String): String {
     return SimpleDateFormat(format, Locale.TAIWAN).format(this)
 }
 
