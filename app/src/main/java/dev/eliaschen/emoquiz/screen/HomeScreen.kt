@@ -34,7 +34,7 @@ import dev.eliaschen.emoquiz.LocalNavViewModel
 import dev.eliaschen.emoquiz.R
 import dev.eliaschen.emoquiz.component.CursorButton
 import dev.eliaschen.emoquiz.component.CursorOutlineButton
-import dev.eliaschen.emoquiz.component.DefaultCursorButton
+import dev.eliaschen.emoquiz.component.defaultCursorButtonColors
 import dev.eliaschen.emoquiz.difficulty
 import dev.eliaschen.emoquiz.viewmodel.Screen
 
@@ -144,7 +144,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 onClick = {
                     handleSubmit()
                 },
-                style = DefaultCursorButton(
+                style = defaultCursorButtonColors(
                     shape = RoundedCornerShape(30f),
                     containerColor = MaterialTheme.colorScheme.tertiaryContainer
                 ),

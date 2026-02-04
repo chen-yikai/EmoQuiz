@@ -2,6 +2,7 @@ package dev.eliaschen.emoquiz.viewmodel
 
 import android.app.Application
 import android.media.MediaPlayer
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -39,6 +40,7 @@ class GameDataViewModel(private val context: Application) : QuestionViewModel(co
     val historyFile = File(context.filesDir, history_file)
     val histories = mutableStateListOf<History>()
     var spotlightId by mutableStateOf("")
+    val historyListState = LazyListState()
 
     // GameState
     val gameQuestions = mutableStateListOf<Question>()

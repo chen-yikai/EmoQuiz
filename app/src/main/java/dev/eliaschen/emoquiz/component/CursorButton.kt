@@ -31,16 +31,24 @@ import androidx.compose.ui.unit.dp
 import dev.eliaschen.emoquiz.LocalGameDataViewModel
 
 data class DefaultCursorButton(
-    val containerColor: Color = Color(0xFFE8DEF8),
-    val progressColor: Color = Color(0xFFCBA6F7),
-    val selectedColor: Color = Color(0xFF6750A4),
+    val containerColor: Color,
+    val progressColor: Color,
+    val selectedColor: Color,
     val shape: Shape = RoundedCornerShape(30f)
 )
 
 @Composable
+fun defaultCursorButtonColors(
+    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    progressColor: Color = MaterialTheme.colorScheme.secondary.copy(0.5f),
+    selectedColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    shape: Shape = RoundedCornerShape(30f)
+) = DefaultCursorButton(containerColor, progressColor, selectedColor, shape)
+
+@Composable
 fun CursorButton(
     modifier: Modifier = Modifier,
-    colors: DefaultCursorButton = DefaultCursorButton(),
+    colors: DefaultCursorButton = defaultCursorButtonColors(),
     selected: Boolean = false,
     onClick: () -> Unit,
     content: @Composable (Boolean) -> Unit
@@ -70,7 +78,7 @@ fun CursorButton(
                 if (selected) Modifier.border(
                     3.dp,
                     MaterialTheme.colorScheme.primary,
-                    DefaultCursorButton().shape
+                    colors.shape
                 ) else Modifier,
             )
             .onGloballyPositioned {

@@ -37,7 +37,7 @@ import dev.eliaschen.emoquiz.LocalGameDataViewModel
 fun CursorOutlineButton(
     modifier: Modifier = Modifier,
     selected: Boolean = false,
-    style: DefaultCursorButton = DefaultCursorButton(),
+    style: DefaultCursorButton = defaultCursorButtonColors(),
     onClick: () -> Unit,
     content: @Composable (Boolean) -> Unit
 ) {
