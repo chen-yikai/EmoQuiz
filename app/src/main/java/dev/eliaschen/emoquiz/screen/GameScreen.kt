@@ -137,7 +137,7 @@ private fun GameDataViewModel.OptionsGridLayout(question: Question) {
 
             LaunchedEffect(isHovered) {
                 if (isHovered) {
-                    progress.animateTo(1f, tween(2000, easing = LinearEasing))
+                    progress.animateTo(1f, tween(1500, easing = LinearEasing))
                     handleSubmit(item.id)
                 } else {
                     progress.snapTo(0f)

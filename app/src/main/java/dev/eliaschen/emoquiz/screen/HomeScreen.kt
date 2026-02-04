@@ -2,18 +2,23 @@ package dev.eliaschen.emoquiz.screen
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,7 +38,9 @@ import androidx.compose.ui.unit.sp
 import dev.eliaschen.emoquiz.LocalGameDataViewModel
 import dev.eliaschen.emoquiz.LocalNavViewModel
 import dev.eliaschen.emoquiz.R
+import dev.eliaschen.emoquiz.component.CursorButton
 import dev.eliaschen.emoquiz.component.CursorOutlineButton
+import dev.eliaschen.emoquiz.component.DefaultCursorButton
 import dev.eliaschen.emoquiz.difficulty
 import dev.eliaschen.emoquiz.viewmodel.Screen
 
@@ -70,43 +76,93 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         }
         Column(
             modifier = Modifier
-                .widthIn(max = 200.dp)
+                .widthIn(max = 250.dp)
                 .padding(vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                OutlinedTextField(
-                    questionCount,
-                    onValueChange = { questionCount = it },
-                    label = { Text("總題數") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
-                )
+            Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                Column {
+                    Text("題數", fontSize = 15.sp)
+                    Spacer(Modifier.height(10.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        listOf(5, 10, 15, 20).forEach { number ->
+                            CursorButton(
+                                onClick = {
+                                    questionCount = number.toString()
+                                }, modifier = Modifier
+                                    .then(
+                                        if (number == questionCount.toInt()) Modifier.border(
+                                            3.dp,
+                                            MaterialTheme.colorScheme.primary,
+                                            DefaultCursorButton().shape
+                                        ) else Modifier,
+                                    )
+                                    .size(50.dp)
+                            ) {
+                                Text("$number")
+                            }
+                        }
+                    }
+                }
+//                OutlinedTextField(
+//                    questionCount,
+//                    onValueChange = { questionCount = it },
+//                    label = { Text("總題數") },
+//                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+//                    singleLine = true
+//                )
                 Column {
                     Text("難易度", fontSize = 15.sp)
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp)
                     ) {
                         difficulty.forEach { (label, value) ->
                             val isSelected = selectedDifficulty.contains(value)
-                            InputChip(
-                                selected = isSelected,
+                            CursorButton(
                                 onClick = {
                                     if (!isSelected) selectedDifficulty.add(value) else selectedDifficulty.remove(
                                         value
                                     )
-                                },
-                                label = { Text(label) })
+                                }, modifier = Modifier
+                                    .then(
+                                        if (isSelected) Modifier.border(
+                                            3.dp,
+                                            MaterialTheme.colorScheme.primary,
+                                            DefaultCursorButton().shape
+                                        ) else Modifier,
+                                    )
+                                    .size(70.dp)
+                            ) {
+                                Text(label)
+                            }
+//                            InputChip(
+//                                selected = isSelected,
+//                                onClick = {
+//                                    if (!isSelected) selectedDifficulty.add(value) else selectedDifficulty.remove(
+//                                        value
+//                                    )
+//                                },
+//                                label = { Text(label) })
                         }
                     }
                 }
             }
-            FloatingActionButton(onClick = {
-                handleSubmit()
-            }) {
+            CursorOutlineButton(
+                onClick = {
+                    handleSubmit()
+                },
+                shape = RoundedCornerShape(30f),
+                modifier = Modifier.padding(vertical = 15.dp, horizontal = 20.dp)
+            ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(5.dp),
