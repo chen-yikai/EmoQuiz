@@ -112,8 +112,9 @@ fun AppCursor() {
                     val roll = orientation[2]
                     val pitch = orientation[1]
                     if (!pitch.isNaN() && !roll.isNaN()) {
-                        rawPitch = -pitch
-                        rawRoll = roll
+                        val alpha = 0.1f
+                        rawPitch += alpha * (-pitch - rawPitch)
+                        rawRoll += alpha * (roll - rawRoll)
                     } else {
                         rawPitch = 0f
                         rawRoll = 0f
@@ -148,7 +149,7 @@ fun AppCursor() {
             )
             Box(
                 modifier = Modifier
-                    .size(15.dp)
+                    .size(30.dp)
                     .onGloballyPositioned { layoutCoordinates ->
                         game.cursorRect = layoutCoordinates.boundsInWindow()
                     }
